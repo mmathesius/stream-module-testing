@@ -8,6 +8,7 @@ dry_run = True
 # set if using an alternate destination namespace, None to use standard namespace
 alt_ns = "temp"
 
+import argparse
 import git
 import logging
 import os
@@ -293,7 +294,9 @@ def import_component(bscm):
     }
     sscm = split_scmurl("{}/{}/{}".format(c["main"]["source"]["scm"], ns, csrc))
     dscm = split_scmurl(
-        "{}/{}/{}".format(c["main"]["destination"]["scm"], alt_ns if alt_ns else ns, cdst)
+        "{}/{}/{}".format(
+            c["main"]["destination"]["scm"], alt_ns if alt_ns else ns, cdst
+        )
     )
     dscm["ref"] = dscm["ref"] if dscm["ref"] else "master"
     logger.debug("source scm = %s", sscm)
@@ -380,16 +383,20 @@ def import_component(bscm):
     logger.info("Successfully synchronized %s/%s.", ns, comp)
 
 
-def main(argv):
+if __name__ == "__main__":
+    parser = argparse.ArgumentParser(
+        description="Import components into the redhat/centos-stream/temp namespace in gitlab."
+    )
+    parser.add_argument(
+        "comps", metavar="comps", nargs="+", help="The components to import"
+    )
+
+    args = parser.parse_args()
+
     distrobaker.loglevel(logging.DEBUG)
     logger.debug("Logging configured")
 
-    for rec in argv:
+    for rec in args.comps:
         logger.info("Processing argument %s.", rec)
         bscm = split_scmurl(rec)
         import_component(bscm)
-
-
-if __name__ == "__main__":
-    main(sys.argv[1:])
-    pass
