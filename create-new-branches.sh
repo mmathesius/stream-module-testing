@@ -26,6 +26,9 @@ do
         ns="${base%/*}"
     fi
 
+    # trim any trailing :stream from module component name
+    comp="${comp%%\:*}"
+
     echo ns="$ns"
     echo comp="$comp"
     echo ref="$ref"
@@ -46,6 +49,7 @@ do
     pushd "$tmpdir" >/dev/null
 
     git checkout --orphan "$ref"
+    git rm -rf --ignore-unmatch .
     git commit --allow-empty -m "Initialize $ref branch"
 
     if [ "$dry_run" == "no" ]

@@ -3,7 +3,7 @@
 # Usage: import-components.py namespace/component#ref [ ... ]
 
 resync_cache_only = False
-dry_run = True
+dry_run = None
 
 # set if using an alternate destination namespace, None to use standard namespace
 alt_ns = "temp"
@@ -94,7 +94,6 @@ c = {
 }
 
 # copy configurable values into lib/distrobaker
-distrobaker.dry_run = dry_run
 distrobaker.c = c
 
 # extract default value from lib/distrobaker
@@ -390,11 +389,23 @@ if __name__ == "__main__":
     parser.add_argument(
         "comps", metavar="comps", nargs="+", help="The components to import"
     )
+    parser.add_argument(
+        "-n",
+        "--dry-run",
+        action="store_true",
+        help="Do not upload or push",
+        default=False,
+    )
 
     args = parser.parse_args()
 
     distrobaker.loglevel(logging.DEBUG)
     logger.debug("Logging configured")
+
+    distrobaker.dry_run = dry_run = args.dry_run
+
+    if dry_run:
+        logger.info("Dry run enabled. Nothing will be uploaded/pushed.")
 
     for rec in args.comps:
         logger.info("Processing argument %s.", rec)
