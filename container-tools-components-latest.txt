@@ -1,4 +1,3 @@
-modules/container-tools:latest-rhel-9.0.0-beta#latest-rhel-9.0.0-beta
 rpms/buildah#stream-container-tools-latest-rhel-9.0.0-beta
 rpms/cockpit-podman#stream-container-tools-latest-rhel-9.0.0-beta
 rpms/conmon#stream-container-tools-latest-rhel-9.0.0-beta
